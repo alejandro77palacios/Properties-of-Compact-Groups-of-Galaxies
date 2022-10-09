@@ -1,0 +1,34 @@
+<html><body><h5 id="theory">Theory</h5>
+<p>Galaxy morphological classification is a system used by astronomers to divide galaxies into groups based on their visual appearance. To compare isolated galaxies and galaxies in groups, we will use the <strong>de Vaucouleurs galaxy classification system </strong>(column <code class="java">T</code>) and the <strong>Sérsic index</strong> (column <code class="java">n</code>).</p>
+<p>Each class of galaxies in the de Vaucouleurs system corresponds to a numerical value. Values of the numerical<strong> Hubble stage</strong> <span class="math-tex">\(T\)</span> run from <span class="math-tex">\(-6\)</span> to <span class="math-tex">\(10\)</span>. Negative numbers correspond to the early-type galaxies (ellipticals and lenticulars), and positive numbers indicate the late types (spirals and irregulars). You can learn more in the <a href="https://www.youtube.com/watch?v=clETiW66Pvc" rel="noopener noreferrer nofollow" target="_blank">Hubble's Galaxy Classification Scheme</a> video (YouTube) by Jason Kendall.</p>
+<p>To explore the impact of high density in compact groups on the formation of early-type galaxies, consider the differences between the CGs of galaxies and a sample of isolated galaxies. In this sample, we have included galaxies that have no companions within a projected distance of <span class="math-tex">\(1\)</span> Mpc with a redshift difference lower than <span class="math-tex">\(0.001\)</span>. To have better results, we only selected galaxies with the redshifts of <span class="math-tex">\(0.01 ≤ z ≤ 0.06\)</span>.</p>
+<p>The <strong>Sérsic profile</strong> is a mathematical function that describes how the intensity <span class="math-tex">\(I\)</span> of a galaxy varies with distance <span class="math-tex">\(r\)</span> from its center. The Sérsic surface-brightness profile takes the form:</p>
+<p style="text-align: center;"><span class="math-tex">\(I(r) = I_\mathrm{e} \exp \left(-\nu_\mathrm{n}\left[\left(\frac{r}{r_\mathrm{e}}\right)^{1/n} - 1 \right]\right)\,,\)</span></p>
+<p>where <span class="math-tex">\(I_\mathrm{e}\)</span> is the surface brightness at the effective radius <span class="math-tex">\(r_\mathrm{e}\)</span>, and <span class="math-tex">\(n\)</span> is the Sérsic index. <span class="math-tex">\(\nu_\mathrm{n}\)</span> is given by the solution of the equation</p>
+<p style="text-align: center;"><span class="math-tex">\(\Gamma(2\,n) = 2 \gamma(2n, \nu_\mathrm{n})\,,\)</span></p>
+<p>where <span class="math-tex">\(\Gamma(x)\)</span> is the gamma function, and <span class="math-tex">\(\gamma(s, x)\)</span> is the incomplete gamma function.</p>
+<p>Sérsic profiles with different indexes:</p>
+<p style="text-align: center;"><img alt="" height="492" name="sersic_models_with_different_indices.png" src="https://ucarecdn.com/7cca6a6a-0219-4720-878a-96aeb4a8b51f/" width="738"/></p>
+<p>Galaxies with a Sérsic index greater than <span class="math-tex">\(2\)</span> tend to be early-type or early-spirals galaxies. So, it may be a good idea to consider a fraction of such galaxies in both datasets.</p>
+<h5 id="description">Description</h5>
+<p>In this stage, you have two datasets with samples of isolated and grouped galaxies. The isolated galaxies' dataset contains a single column <code class="java">n</code> with the Sérsic indexes. The dataset with compact groups of galaxies contains 4 columns: <code class="java">Group</code> with group names, <code class="java">Name</code> with galaxy names, <code class="java">n</code> with the Sérsic indexes, and <code class="java">T</code> with numerical Hubble stages:</p>
+<pre><code class="language-no-highlight">   Group                       Name        n  T
+0  HCG 1            UGC 00248 NED01   2.8641  5
+1  HCG 1            UGC 00248 NED02   3.3413  1
+2  HCG 1  WISEA J002558.82+254331.0   2.8468 -2
+3  HCG 1  WISEA J002554.42+254325.2  11.2216 -5
+4  HCG 2                  UGC 00314   1.8987  5</code></pre>
+<h5 id="objectives">Objectives</h5>
+<p>Load the datasets of isolated galaxies and galaxies in compact groups. Examine the histograms for the Sérsic index of isolated and galaxy groups in the picture below and try to plot the same chart. To discover the differences between the isolated galaxies and galaxies in CGs perform the Kolmogorov-Smirnov homogeneity test for galaxy distributions by the Sérsic index.</p>
+<p><img alt="" height="480" name="hist_stage3.jpg" src="https://ucarecdn.com/2e74f71d-18d8-44f5-994d-94ff518d41cc/" width="640"/></p>
+<p>To complete this stage:</p>
+<ul>
+<li>Read the datasets:  <a href="https://stepik.org/media/attachments/lesson/665342/galaxies_morphology.tsv" rel="noopener noreferrer nofollow" target="_blank">galaxies_morphology.tsv</a> and <a href="https://stepik.org/media/attachments/lesson/665342/isolated_galaxies.tsv" rel="noopener noreferrer nofollow" target="_blank">isolated_galaxies.tsv</a>;</li>
+<li>Plot the histograms for the Sérsic index for both datasets;</li>
+<li>Calculate a fraction of galaxies with the Sérsic index <span class="math-tex">\(n &gt; 2\)</span> for both datasets;</li>
+<li>Perform <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ks_2samp.html" rel="noopener noreferrer nofollow" target="_blank">the two-sample Kolmogorov-Smirnov test</a> for equality for datasets and obtain a <span class="math-tex">\(p\)</span>-value. Note that you must use a two-sided alternative for this test. It means that the null hypothesis is that the two given samples are drawn from the same probability distribution;</li>
+<li>Print three floating-point numbers separated by one space: fractions of galaxies with the Sersic index <span class="math-tex">\(n &gt; 2\)</span> for groups' galaxies and isolated galaxies, and a <span class="math-tex">\(p\)</span>-value obtained from the Kolmogorov-Smirnov test.</li>
+</ul>
+<h5 id="example">Example</h5>
+<p><strong>Example 1</strong>: <em>an example of the program output</em></p>
+<pre><code class="language-no-highlight">0.23693 0.31745 5.16332e-7</code></pre></body></html>

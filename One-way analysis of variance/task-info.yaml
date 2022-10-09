@@ -1,0 +1,110 @@
+type: edu
+files:
+- name: main.py
+  visible: true
+  text: |
+    import pandas as pd
+
+    groups = pd.read_csv('data/groups.tsv', sep='\t')
+    groups.dropna(inplace=True)
+    brightness = groups.groupby('features')['mean_mu'].mean()
+    print(brightness[1], brightness[0])
+  learner_created: false
+- name: data/groups.tsv
+  visible: true
+  text: "Group\tz\tmean_mu\tfeatures\nHCG 1\t0.033952\t\t1\nHCG 2\t0.014506999999999999\t\
+    27.589242857029266\t1\nHCG 3\t0.026031\t\t1\nHCG 5\t0.040764999999999996\t27.01945117084977\t\
+    1\nHCG 7\t0.01395\t28.283606622723326\t1\nHCG 8\t0.054002499999999995\t26.07672567253305\t\
+    1\nHCG 12\t0.048263\t26.74079842371625\t1\nHCG 13\t0.041592000000000004\t26.51878086972096\t\
+    1\nHCG 17\t0.060105\t25.98265788647741\t1\nHCG 18\t0.013693\t26.499388560574985\t\
+    1\nHCG 20\t0.048113\t26.375779158338627\t1\nHCG 25\t0.021087\t27.18398867770714\t\
+    1\nHCG 35\t0.0543355\t25.73794637603001\t1\nHCG 37\t0.022515\t26.027000515744422\t\
+    1\nHCG 44\t0.004607\t26.92137812086037\t1\nHCG 59\t0.013706\t26.880093933520804\t\
+    1\nHCG 69\t0.02932\t26.393697002563066\t1\nHCG 71\t0.030836000000000002\t27.59646545309433\t\
+    0\nHCG 72\t0.04332\t26.37221601049931\t1\nHCG 74\t0.039948000000000004\t25.82293972868336\t\
+    1\nHCG 76\t0.034004\t26.88906297656805\t0\nHCG 78\t0.031835\t27.32269992603484\t\
+    1\nHCG 80\t0.031118\t27.01188499246912\t1\nHCG 81\t0.049841\t26.66962697875684\t\
+    1\nHCG 82\t0.0360645\t26.63577745562475\t1\nHCG 84\t0.055552\t25.78040452101569\t\
+    1\nHCG 86\t0.019657\t25.31227541570467\t0\nHCG 88\t0.020138\t27.40070109635393\t\
+    0\nHCG 89\t0.029569\t27.993146540403714\t0\nHCG 93\t0.016418000000000002\t27.47716861197513\t\
+    1\nHCG 94\t0.042176000000000005\t25.84883602405461\t1\nHCG 95\t0.039624\t27.27916778860817\t\
+    1\nHCG 96\t0.029225499999999998\t27.03340315160207\t1\nHCG 97\t0.022232\t\t1\n\
+    HCG 98\t0.026548000000000002\t26.05255313239199\t1\nHCG 100\t0.018057499999999997\t\
+    27.448295777247647\t1\n"
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |
+    from hstest import CheckResult, dynamic_test, StageTest, TestedProgram, WrongAnswer
+    from math import isclose
+
+
+    def is_float(num: str):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
+
+    class Stage2Test(StageTest):
+        def check_outputs_number(self, values_number: int, user_output: str):
+            outputs = user_output.split()
+
+            if not all(is_float(output) for output in outputs):
+                raise WrongAnswer(f"Answer '{user_output}' contains non-numeric values.")
+
+            if len(outputs) != values_number:
+                raise WrongAnswer(f"Answer contains {len(outputs)} values, but {values_number} values are expected.")
+
+        def check_num_values(self, values: list, user_values: list, message: str, rel_tol=1.0e-3):
+            if not all(isclose(value, user_value, rel_tol=rel_tol) for value, user_value in zip(values, user_values)):
+                raise WrongAnswer(message)
+
+        @dynamic_test
+        def test(self):
+            pr = TestedProgram()
+            user_output = pr.start().strip()
+
+            if len(user_output.strip()) == 0:
+                raise WrongAnswer("Seems like your program does not show any output.")
+
+            # check output format
+            self.check_outputs_number(4, user_output)
+
+            # check Shapiro tests p-values
+            p_value = [0.38157448172569275]
+            user_values = [float(value) for value in user_output.split()][:1]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of Shapiro-Wilk test for groups with features is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            p_value = [0.2881646156311035]
+            user_values = [float(value) for value in user_output.split()][1:2]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of Shapiro-Wilk test for groups without features is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            # check Fligner-Killeen test p-value
+            p_values = [0.9852439643237789]
+            user_values = [float(value) for value in user_output.split()][2:3]
+            self.check_num_values(p_values, user_values, "The p-value of Fligner-Killeen test is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.", rel_tol=1.0e-2)
+
+            # check ANOVA test p-value
+            p_values = [0.3033219803806167]
+            user_values = [float(value) for value in user_output.split()][3:4]
+            self.check_num_values(p_values, user_values, "The p-value of ANOVA test is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.", rel_tol=1.0e-5)
+
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        Stage2Test().run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/249/stages/1250/implement#comment
+status: Solved
+record: 1

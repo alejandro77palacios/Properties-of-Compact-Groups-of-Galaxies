@@ -1,0 +1,63 @@
+<html><body><h5 id="theory">Theory</h5>
+<p><strong>Angular diameter distance</strong> is the coefficient of proportionality between an object's physical size <span class="math-tex">\(r\)</span> and its angular size <span class="math-tex">\(\theta\)</span>, as viewed from Earth:</p>
+<p style="text-align: center;"><span class="math-tex">\(r = d_{A} \cdot \theta \Leftrightarrow d_{A} = \frac{r}{\theta}.\)</span></p>
+<p>The angular diameter distance depends on the object's cosmological redshift and the assumed cosmology of the Universe. To learn more about this topic, you can study the <a href="https://www.youtube.com/watch?v=MFJnLO4afQU" rel="noopener noreferrer nofollow" target="_blank">Cosmology: Angular Diameter Distance: Lecture12</a> by Jeremiah Murphy on YouTube.</p>
+<h5 id="description">Description</h5>
+<p>In this stage, we provide the dataset with the <strong>equatorial coordinates</strong> of galaxy groups. The dataset contains 4 columns: <code class="language-python">Group</code> with groups' names, <code class="language-python">Name</code> with galaxies' names, <code class="language-python">RA</code> with galaxies' right ascensions in degrees, and <code class="language-python">DEC</code> with galaxies' declinations in degrees. To clearly understand the celestial equatorial coordinate system, take a look at the <a href="https://www.youtube.com/watch?v=WvXTUcYVXzI" rel="noopener noreferrer nofollow" target="_blank">Equatorial Coordinate System Explained</a> video by Launch Pad Astronomy on YouTube. Below is a sample of the dataset for your convenience:</p>
+<pre><code class="language-no-highlight">   Group                       Name       RA       DEC
+0  HCG 1            UGC 00248 NED01  6.52971  25.72519
+1  HCG 1            UGC 00248 NED02  6.52479  25.71933
+2  HCG 1  WISEA J002554.42+254325.2  6.47670  25.72366
+3  HCG 1  WISEA J002558.82+254331.0  6.49504  25.72519
+4  HCG 2                  UGC 00312  7.84962   8.46683</code></pre>
+<h5 id="objectives">Objectives</h5>
+<p>Estimate the <strong>projected median separation</strong> (the median length of the two-dimensional galaxy-galaxy separation vector of a group on a picture plane) using equatorial coordinates and the mean redshifts of the galaxies in a group. Find the relation between the IGL mean surface brightness and the projected median separation using the Pearson correlation coefficient. Let's go through it step by step:</p>
+<ul>
+<li>Initialize the ΛCDM cosmology model with the parameters <span class="math-tex">\(H_0=67.74\)</span>, <span class="math-tex">\(\Omega_m=0.3089\)</span> using <code class="language-python">astropy.cosmology.FlatLambdaCDM</code>;</li>
+<li>Read the dataset with galaxies' equatorial coordinates: <a href="https://stepik.org/media/attachments/lesson/665342/galaxies_coordinates.tsv" rel="noopener noreferrer nofollow" target="_blank">galaxies_coordinates.tsv</a>;</li>
+<li>Calculate the angular diameter distances, <span class="math-tex">\(d_A\)</span>, in kiloparsecs for groups' median redshifts (the <code class="language-python">z</code> column in <a href="https://stepik.org/media/attachments/lesson/665342/groups.tsv" rel="noopener noreferrer nofollow" target="_blank">groups.tsv</a>) using the cosmology model method <code class="language-python">angular_diameter_distance</code>.<br/>
+<br/>
+	An example of applying the ΛCDM model;
+	<pre><code class="language-python">from astropy.cosmology import FlatLambdaCDM
+from astropy import units as u
+
+my_cosmo = FlatLambdaCDM(H0=67.74, Om0=0.3089)
+z = 0.06
+angular_diameter_distance = my_cosmo.angular_diameter_distance(z).to(u.kpc)
+print(angular_diameter_distance)</code></pre>
+	The result: 
+
+	<pre><code class="language-no-highlight">246986.18377537967 kpc</code></pre>
+	The result above means that an object with a cosmological redshift of <span class="math-tex">\(0.06\)</span> has an angular diameter distance, <span class="math-tex">\(d_A\)</span>, of almost <span class="math-tex">\(247 \times 10^3\)</span> kpc. Assuming that an angular diameter, <span class="math-tex">\(\theta\)</span>, equals <span class="math-tex">\(1\)</span>, the object's physical size, <span class="math-tex">\(r\)</span>, is almost <span class="math-tex">\(247 \times 10^3\)</span> kpc as well according to the formula in the Theory section. </li>
+<li>Calculate the projected median separation. It is the median of the pairwise projected distance<span style="color: #a03881;"> </span>between the galaxies in each group. Denoted as <span class="math-tex">\(r\)</span> in the formula.<br/>
+<br/>
+	Use <code class="language-python">astropy.coordinates.SkyCoord</code> with the <code class="language-python">fk5</code> coordinate frame. To find the angular distance, <span class="math-tex">\(\theta\)</span>, between two points with the sky coordinates <code class="language-python">p1</code> and <code class="language-python">p2</code>, use the <code class="language-python">separation</code> method of the <code class="language-python">SkyCoord</code> object:
+	<pre><code class="language-python">from astropy.coordinates import SkyCoord
+
+p1 = SkyCoord(ra=6.52971 * u.degree, dec=25.72519 * u.degree, frame="fk5")
+p2 = SkyCoord(ra=6.52479 * u.degree, dec=25.71933 * u.degree, frame="fk5")
+print(p1.separation(p2))</code></pre>
+<p>The result: </p>
+<pre><code class="language-no-highlight">0d00m26.45115464s</code></pre>
+<p>But there are only two points in the example. What to do with a set of galaxies that we have? A galaxy represents a point. You should apply the <code class="language-python">separation</code> method to all possible pairs of galaxies within each group and then calculate the median for every group. For example, you have two groups. The first group has galaxies <code class="language-python">A</code>, <code class="language-python">B</code> and <code class="language-python">C</code> and the second one has <code class="language-python">D</code>, <code class="language-python">E</code>, <code class="language-python">F</code> and <code class="language-python">G</code>. In the first group, you will apply the <code class="language-python">separation</code> method to <code class="language-python">A</code>-<code class="language-python">B</code>, <code class="language-python">B</code>-<code class="language-python">C</code> and <code class="language-python">A</code>-<code class="language-python">C</code>, get three numbers and then calculate the median value for the first group. In the second group, there are six pairs: <code class="language-python">D</code>-<code class="language-python">E</code>, <code class="language-python">D</code>-<code class="language-python">F</code>, <code class="language-python">D</code>-<code class="language-python">G</code>, <code class="language-python">E</code>-<code class="language-python">F</code>, <code class="language-python">E</code>-<code class="language-python">G</code> and <code class="language-python">F</code>-<code class="language-python">G</code>. You will apply the <code class="language-python">separation</code> method to all of them, get six numbers and find the median.<br/>
+</p><div class="alert alert-warning">To calculate a physical distance, <span class="math-tex">\(r\)</span>, between two objects multiply their angular distance, <span class="math-tex">\(\theta\)</span>, in radians* by their angular diameter distance, <span class="math-tex">\(d_A\)</span>. For each pair of galaxies their angular distance, <span class="math-tex">\(\theta\)</span>, should be multiplied by the angular diameter distance, <span class="math-tex">\(d_A\)</span>, of a group, which the galaxies came from.</div><p></p>
+</li>
+</ul>
+<p>* To convert one physical unit to another, use <a href="https://docs.astropy.org/en/stable/units/index.html#module-astropy.units" rel="noopener noreferrer nofollow" target="_blank" title="astropy.units">astropy.units</a> and the <code class="language-python">to</code> method:</p>
+<pre><code class="language-python">a = 42.0 * u.meter
+a.to(u.kilometer)</code></pre>
+<pre><code class="language-no-highlight">0.042 km  # the result</code></pre>
+<p>If you are going to obtain a numerical value of physical value, you can use the <code class="language-python">value</code> attribute:</p>
+<pre><code class="language-python">a = 42.0 * u.meter
+a.value </code></pre>
+<pre><code class="language-no-highlight">42.0  # the result</code></pre>
+<ul>
+<li>Plot a scatterplot for the projected median separation and the IGL mean surface brightness;</li>
+<li>Conduct <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html" rel="noopener noreferrer nofollow" target="_blank">the Shapiro-Wilk Normality test</a> for the projected median separation and <code class="language-python">mean_mu</code>;</li>
+<li>Calculate <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html" rel="noopener noreferrer nofollow" target="_blank">the Pearson correlation coefficient</a> and the corresponding <span class="math-tex">\(p\)</span>-value for testing the non-correlation for these values;</li>
+<li>Print four floating-point numbers separated with one space: the median separation for the <code class="language-python">HCG 2</code> group, <span class="math-tex">\(p\)</span>-values for the normality test of the projected median separation and <code class="language-python">mean_mu</code>, and a <span class="math-tex">\(p\)</span>-value for testing the non-correlation for these values.</li>
+</ul>
+<h5 id="example">Example</h5>
+<p><strong>Example 1: </strong><em>an example of the program output, note the inverted magnitude axis</em></p>
+<p style="text-align: center;"><img alt="" height="290" name="mu_IGL_vs_R.png" src="https://ucarecdn.com/7039fb4b-3d1a-4831-993e-c3c7672ce25f/" width="431"/></p>
+<pre><code class="language-no-highlight">35.21002 0.16654 0.79542 2.35061e-07</code></pre></body></html>

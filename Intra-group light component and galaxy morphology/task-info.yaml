@@ -1,0 +1,523 @@
+type: edu
+files:
+- name: main.py
+  visible: true
+  text: |
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from scipy import stats
+
+    isolated = pd.read_csv('data/isolated_galaxies.tsv', sep='\t')
+    morpho = pd.read_csv('data/galaxies_morphology.tsv', sep='\t')
+    sersic = isolated['n'], morpho['n']
+    plt.hist(sersic, label = ['isolated', 'groups'], stacked=True)
+    plt.legend()
+    plt.show()
+
+    mg2 = morpho[morpho['n'] > 2].shape[0] / morpho.shape[0]
+    ig2 = isolated[isolated['n'] > 2].shape[0] / isolated.shape[0]
+    pv = stats.ks_2samp(sersic[0], sersic[1]).pvalue
+
+    print(mg2, ig2, pv)
+  learner_created: false
+- name: data/groups.tsv
+  visible: true
+  text: "Group\tz\tmean_mu\tfeatures\nHCG 1\t0.033952\t\t1\nHCG 2\t0.014506999999999999\t\
+    27.589242857029266\t1\nHCG 3\t0.026031\t\t1\nHCG 5\t0.040764999999999996\t27.01945117084977\t\
+    1\nHCG 7\t0.01395\t28.283606622723326\t1\nHCG 8\t0.054002499999999995\t26.07672567253305\t\
+    1\nHCG 12\t0.048263\t26.74079842371625\t1\nHCG 13\t0.041592000000000004\t26.51878086972096\t\
+    1\nHCG 17\t0.060105\t25.98265788647741\t1\nHCG 18\t0.013693\t26.499388560574985\t\
+    1\nHCG 20\t0.048113\t26.375779158338627\t1\nHCG 25\t0.021087\t27.18398867770714\t\
+    1\nHCG 35\t0.0543355\t25.73794637603001\t1\nHCG 37\t0.022515\t26.027000515744422\t\
+    1\nHCG 44\t0.004607\t26.92137812086037\t1\nHCG 59\t0.013706\t26.880093933520804\t\
+    1\nHCG 69\t0.02932\t26.393697002563066\t1\nHCG 71\t0.030836000000000002\t27.59646545309433\t\
+    0\nHCG 72\t0.04332\t26.37221601049931\t1\nHCG 74\t0.039948000000000004\t25.82293972868336\t\
+    1\nHCG 76\t0.034004\t26.88906297656805\t0\nHCG 78\t0.031835\t27.32269992603484\t\
+    1\nHCG 80\t0.031118\t27.01188499246912\t1\nHCG 81\t0.049841\t26.66962697875684\t\
+    1\nHCG 82\t0.0360645\t26.63577745562475\t1\nHCG 84\t0.055552\t25.78040452101569\t\
+    1\nHCG 86\t0.019657\t25.31227541570467\t0\nHCG 88\t0.020138\t27.40070109635393\t\
+    0\nHCG 89\t0.029569\t27.993146540403714\t0\nHCG 93\t0.016418000000000002\t27.47716861197513\t\
+    1\nHCG 94\t0.042176000000000005\t25.84883602405461\t1\nHCG 95\t0.039624\t27.27916778860817\t\
+    1\nHCG 96\t0.029225499999999998\t27.03340315160207\t1\nHCG 97\t0.022232\t\t1\n\
+    HCG 98\t0.026548000000000002\t26.05255313239199\t1\nHCG 100\t0.018057499999999997\t\
+    27.448295777247647\t1\n"
+  learner_created: false
+- name: data/galaxies_morphology.tsv
+  visible: true
+  text: "Group\tName\tn\tT\nHCG 1\tUGC 00248 NED01\t2.8641\t5\nHCG 1\tUGC 00248 NED02\t\
+    3.3413\t1\nHCG 1\tWISEA J002558.82+254331.0\t2.8468\t-2\nHCG 1\tWISEA J002554.42+254325.2\t\
+    11.2216\t-5\nHCG 2\tUGC 00314\t1.8987\t5\nHCG 2\tUGC 00312\t1.7498\t7\nHCG 2\t\
+    UGC 00312 NOTES01\t2.737\t1\nHCG 3\tMCG -01-02-032\t0.7471\t5\nHCG 3\tWISEA J003409.83-073608.5\t\
+    2.7048\t-2\nHCG 3\tWISEA J003425.11-073558.2\t2.8087\t0\nHCG 5\tNGC 0190 NED01\t\
+    4.0175\t2\nHCG 5\tNGC 0190 NED02\t4.0642\t-2\nHCG 5\tUGC 00397 NOTES03\t5.6073\t\
+    -2\nHCG 7\tNGC 0201\t1.8246\t5\nHCG 7\tNGC 0192\t4.6516\t1\nHCG 7\tNGC 0197\t\
+    2.4876\t-2\nHCG 7\tNGC 0196\t5.6045\t-2\nHCG 7\tWISEA J003915.46+005633.2\t4.4771\t\
+    -5\nHCG 8\tVV 521 NED01\t10.7\t-5\nHCG 8\tVV 521 NED02\t4.86\t-2\nHCG 8\tVV 521\
+    \ NED03\t4.32\t-2\nHCG 8\tVV 521 NED04\t12.32\t-2\nHCG 8\tMCG +04-03-009\t0.67\t\
+    -2\nHCG 12\tMCG -01-04-052\t4.5593\t-2\nHCG 12\tWISEA J012727.83-044038.6\t3.4362\t\
+    -2\nHCG 12\tWISEA J012737.28-044006.2\t1.2667\t4\nHCG 12\tWISEA J012737.39-043940.3\t\
+    1.7021\t-2\nHCG 12\tWISEA J012734.33-043906.6\t4.1812\t-2\nHCG 13\tWISEA J013219.13-075345.8\t\
+    3.237\t-2\nHCG 13\tMCG -01-05-004\t3.7059\t-2\nHCG 13\tMCG -01-05-003\t4.8876\t\
+    -5\nHCG 13\tWISEA J013225.97-075208.9\t2.5594\t-2\nHCG 13\tMCG -01-05-002\t1.6909999999999998\t\
+    3\nHCG 17\tHCG 017A\t6.57\t-5\nHCG 17\tWISEA J021403.85+131847.2\t10.23\t-5\n\
+    HCG 17\tWISEA J021405.04+131902.2\t8.02\t-2\nHCG 17\tWISEA J021407.58+131823.6\t\
+    7.4\t-2\nHCG 20\tWISEA J024417.16+260639.2\t1.6936\t0\nHCG 20\t2MFGC 02173\t2.5276\t\
+    -5\nHCG 20\tWISEA J024413.62+260620.4\t4.6205\t-5\nHCG 20\tWISEA J024416.74+260610.5\t\
+    3.5358\t-5\nHCG 20\tWISEA J024412.04+260556.2\t2.9209\t-2\nHCG 25\tCGCG 390-067\t\
+    2.2019\t-2\nHCG 25\tUGC 02691 NED01\t3.4963\t1\nHCG 25\tUGC 02691 NED02\t6.5792\t\
+    -2\nHCG 25\tWISEA J032034.84-010545.0\t2.7899\t-2\nHCG 25\tUGC 02690\t1.3712\t\
+    5\nHCG 35\tWISEA J084521.24+443114.0\t3.54\t-2\nHCG 35\tWISEA J084520.59+443032.1\t\
+    5.4\t-3\nHCG 35\tWISEA J084518.42+443139.5\t9.43\t-2\nHCG 35\t2MASX J08452066+4432231\t\
+    1.65\t3\nHCG 35\tWISEA J084520.75+443012.2\t4.49\t-2\nHCG 35\tWISEA J084520.87+443159.5\t\
+    2.8\t-5\nHCG 37\tNGC 2783\t5.37\t3\nHCG 37\tNGC 2783B\t1.01\t4\nHCG 37\tMCG +05-22-020\t\
+    1.61\t0\nHCG 37\tMCG +05-22-016\t1.22\t8\nHCG 37\tMCG +05-22-018\t2.02\t-5\nHCG\
+    \ 44\tNGC 3185\t1.838\t1\nHCG 44\tSDSS J101723.29+214757.9\t1.1655\t5\nHCG 44\t\
+    NGC 3190:[WLQ2016] X0001\t3.8612\t1\nHCG 44\tNGC 3187\t0.5912\t5\nHCG 44\tNGC\
+    \ 3193\t5.2373\t-5\nHCG 59\tKUG 1145+130\t0.6285\t9\nHCG 59\tIC 0737\t2.1781\t\
+    1\nHCG 59\tSDSS J114817.89+124333.1\t1.0395\t9\nHCG 59\tIC 0736\t2.6136\t-3\n\
+    HCG 59\tKUG 1145+129\t0.9891\t5\nHCG 69\tUGC 08842 NOTES01\t7.7052\t-2\nHCG 69\t\
+    UGC 08842 NED02\t1.4493\t5\nHCG 69\tCGCG 132-048\t1.7032\t3\nHCG 71\tIC 4382\t\
+    1.6765\t3\nHCG 71\tNGC 5008\t1.6638\t6\nHCG 71\tKUG 1408+257\t0.9162\t5\nHCG 72\t\
+    UGC 09532 NED01\t4.5161\t-2\nHCG 72\tWISEA J144748.21+190352.2\t0.8504\t9\nHCG\
+    \ 72\tUGC 09532 NED02\t5.7162\t-2\nHCG 72\tUGC 09532 NED04\t4.141\t-2\nHCG 72\t\
+    UGC 09532 NED07\t12.0756\t-2\nHCG 72\tUGC 09532 NED05\t6.0432\t-2\nHCG 72\tUGC\
+    \ 09532 NED06\t1.4662\t-2\nHCG 74\tNGC 5910 NED02\t4.41\t-5\nHCG 74\tNGC 5910\
+    \ NED01\t5.79\t-5\nHCG 74\tNGC 5910 NED03\t3.3\t-2\nHCG 74\tWISEA J151931.81+205301.0\t\
+    2.41\t-5\nHCG 74\tWISEA J151927.78+205431.8\t1.0\t-2\nHCG 76\t2MFGC 12530\t0.5308\t\
+    5\nHCG 76\tNGC 5941\t4.5718\t-3\nHCG 76\tCGCG 050-011 NED01\t1.9134\t-2\nHCG 76\t\
+    NGC 5942\t5.5918\t-2\nHCG 76\tWISEA J153150.20+071841.8\t2.395\t-2\nHCG 76\tNGC\
+    \ 5944\t1.7148\t3\nHCG 76\tCGCG 050-010\t4.1428\t-5\nHCG 78\tWISEA J154833.18+681412.0\t\
+    0.8808\t9\nHCG 78\tUGC 10057\t3.1781\t4\nHCG 78\tCGCG 319-024\t2.3798\t-2\nHCG\
+    \ 80\tWISEA J155907.33+651401.4\t0.6183\t8\nHCG 80\t2MFGC 12823\t0.4267\t7\nHCG\
+    \ 80\tWISEA J155921.65+651323.2\t6.3518\t1\nHCG 80\tWISEA J155912.02+651319.5\t\
+    1.3407\t9\nHCG 81\tUGC 10319 NED01\t1.1677\t5\nHCG 81\tUGC 10319 NED03\t6.1959\t\
+    0\nHCG 81\tUGC 10319 NED04\t4.5205\t-2\nHCG 81\tUGC 10319 NED02\t4.0362\t-2\n\
+    HCG 82\tNGC 6162\t5.8474\t-2\nHCG 82\tNGC 6163\t2.2897\t0\nHCG 82\tNGC 6161\t\
+    0.4264\t4\nHCG 84\tCGCG 355-020 NED01\t5.0753\t-5\nHCG 86\tMCG -05-47-001\t5.6212\t\
+    -2\nHCG 86\tMCG -05-47-003\t7.6793\t-5\nHCG 86\tESO 461- G 007\t4.8689\t-5\nHCG\
+    \ 86\tMCG -05-47-002\t3.4485\t-2\nHCG 88\tNGC 6978\t1.8584\t3\nHCG 88\tWISEA J205223.16-054326.2\t\
+    2.9008\t5\nHCG 88\tNGC 6977\t2.128\t1\nHCG 88\tNGC 6975\t1.5587\t4\nHCG 88\tSDSS\
+    \ J205224.43-054714.2\t1.2026\t9\nHCG 88\tMCG -01-53-014\t1.0229\t5\nHCG 89\t\
+    WISEA J212019.18-035345.6\t1.2627\t5\nHCG 89\tWISEA J212007.99-035429.1\t0.4366\t\
+    9\nHCG 89\t2MASX J21200830-0355036\t1.1387\t6\nHCG 89\tMCG -01-54-012\t1.1945\t\
+    5\nHCG 93\tNGC 7553\t5.4157\t-3\nHCG 93\tNGC 7549\t1.4081\t6\nHCG 93\tNGC 7547\t\
+    3.7377\t0\nHCG 93\tNGC 7550\t3.9405\t-2\nHCG 94\t2MASXi J2317202+184405\t5.8053\t\
+    -2\nHCG 94\t2MASX J23171540+1843385\t0.998\t7\nHCG 95\tNGC 7609 NED01\t5.1862\t\
+    -5\nHCG 95\tNGC 7609 NED02\t2.074\t9\nHCG 95\tMCG +01-59-046\t1.4148\t5\nHCG 96\t\
+    NGC 7674A\t3.0577\t1\nHCG 96\tNGC 7674\t4.6501\t4\nHCG 96\tNGC 7675\t5.0837\t\
+    -3\nHCG 96\tWISEA J232800.09+084602.8\t0.8927\t10\nHCG 97\tIC 5352\t5.3271\t0\n\
+    HCG 97\tIC 5357\t5.3333\t-2\nHCG 97\tIC 5351\t3.9476\t-5\nHCG 97\tIC 5359\t1.4821\t\
+    5\nHCG 97\tIC 5356\t2.7551\t1\nHCG 97\tWISEA J234720.25-022225.9\t1.4693\t10\n\
+    HCG 97\tWISEA J234723.26-022147.1\t2.4749\t9\nHCG 98\tNGC 7783 NED01\t5.1899\t\
+    -2\nHCG 100\tKUG 2358+128A\t3.135\t5\nHCG 100\tMRK 0934\t1.3082\t0\nHCG 100\t\
+    MCG +02-01-010\t0.9704\t6\nHCG 100\tNGC 7803\t4.717\t0\n"
+  learner_created: false
+- name: data/isolated_galaxies.tsv
+  visible: true
+  text: |
+    n
+    1.07
+    1.34
+    1.21
+    0.79
+    0.91
+    0.96
+    0.68
+    0.84
+    0.71
+    1.47
+    3.72
+    0.67
+    2.55
+    2.87
+    0.59
+    1.25
+    0.75
+    3.08
+    1.12
+    1.09
+    0.98
+    1.15
+    1.81
+    1.22
+    1.21
+    0.91
+    5.45
+    1.73
+    1.61
+    1.43
+    1.77
+    8.0
+    0.91
+    1.01
+    0.81
+    1.44
+    4.77
+    1.71
+    0.76
+    1.53
+    0.92
+    1.04
+    1.29
+    1.53
+    3.24
+    1.15
+    1.25
+    1.58
+    2.19
+    0.78
+    1.08
+    0.68
+    1.04
+    0.71
+    2.22
+    0.5
+    5.34
+    0.93
+    7.7
+    5.26
+    2.21
+    0.69
+    3.18
+    0.76
+    1.37
+    0.8
+    0.53
+    4.27
+    2.8
+    1.04
+    5.76
+    0.63
+    5.45
+    2.92
+    0.94
+    1.02
+    5.68
+    5.25
+    0.54
+    1.45
+    0.69
+    5.03
+    1.53
+    4.17
+    2.33
+    1.26
+    1.51
+    4.26
+    1.23
+    1.0
+    0.88
+    2.37
+    0.76
+    0.76
+    0.91
+    0.73
+    1.25
+    6.01
+    1.77
+    1.18
+    2.1
+    2.33
+    1.31
+    1.09
+    1.06
+    0.91
+    4.14
+    5.74
+    0.5
+    2.6
+    0.83
+    0.65
+    1.58
+    1.03
+    3.23
+    3.56
+    2.04
+    1.06
+    0.88
+    2.39
+    1.41
+    1.17
+    2.16
+    2.18
+    1.4
+    2.61
+    4.43
+    2.23
+    0.73
+    1.0
+    3.31
+    3.92
+    2.54
+    1.5
+    1.14
+    1.1
+    1.94
+    4.02
+    3.5
+    1.88
+    1.45
+    1.04
+    4.06
+    1.03
+    4.35
+    0.5
+    1.0
+    4.13
+    1.05
+    1.52
+    1.39
+    0.95
+    0.55
+    4.87
+    0.76
+    0.95
+    1.06
+    3.85
+    0.7
+    0.8
+    2.63
+    2.65
+    1.56
+    0.57
+    0.54
+    0.82
+    4.14
+    1.73
+    0.71
+    1.25
+    0.78
+    1.01
+    1.17
+    1.02
+    0.86
+    0.74
+    1.14
+    0.73
+    1.05
+    3.65
+    2.82
+    5.89
+    1.01
+    2.21
+    1.53
+    1.4
+    4.01
+    1.02
+    0.55
+    1.33
+    1.05
+    2.04
+    1.75
+    0.75
+    0.67
+    0.64
+    0.63
+    0.89
+    0.55
+    6.19
+    1.12
+    0.5
+    3.43
+    0.85
+    0.77
+    0.93
+    4.81
+    2.61
+    5.1
+    0.64
+    0.53
+    1.01
+    4.93
+    0.83
+    0.85
+    0.85
+    1.34
+    0.74
+    0.89
+    4.28
+    1.07
+    2.04
+    0.5
+    2.14
+    0.75
+    0.6
+    0.82
+    0.83
+    0.96
+    1.07
+    1.12
+    1.12
+    0.55
+    1.09
+    1.09
+    4.4
+    1.98
+    0.78
+    0.81
+    6.29
+    0.92
+    1.58
+    2.04
+    1.79
+    1.43
+    1.21
+    1.27
+    0.85
+    2.68
+    0.57
+    0.73
+    1.3
+    0.87
+    2.38
+    2.68
+    1.61
+    3.08
+    0.94
+    1.49
+    0.94
+    0.74
+    0.89
+    0.81
+    4.03
+    1.52
+    1.07
+    1.27
+    0.59
+    0.72
+    1.74
+    1.02
+    1.91
+    0.81
+    0.87
+    0.86
+    3.71
+    1.26
+    3.58
+    1.52
+    2.66
+    0.85
+    5.17
+    0.92
+    1.13
+    0.84
+    2.41
+    1.45
+    0.92
+    2.5
+    1.8
+    4.08
+    0.54
+    1.74
+    1.85
+    0.95
+    0.74
+    0.93
+    1.11
+    4.7
+    2.3
+    1.63
+    1.78
+    0.8
+    0.98
+    4.5
+    1.5
+    0.56
+    5.82
+    0.7
+    1.51
+    6.73
+    1.03
+    4.75
+    0.83
+    0.93
+    4.89
+    0.82
+    5.71
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |
+    from hstest import *
+    from math import isclose
+
+
+    def is_float(num: str):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
+
+    class Stage4Test(PlottingTest):
+        def check_outputs_number(self, values_number: int, user_output: str):
+            outputs = user_output.split()
+
+            if not all(is_float(output) for output in outputs):
+                raise WrongAnswer(f"Answer '{user_output}' contains non-numeric values.")
+
+            if len(outputs) != values_number:
+                raise WrongAnswer(f"Answer contains {len(outputs)} values, but {values_number} values are expected.")
+
+        def check_num_values(self, values: list, user_values: list, message: str, rel_tol=1.0e-3):
+            if not all(isclose(value, user_value, rel_tol=rel_tol) for value, user_value in zip(values, user_values)):
+                raise WrongAnswer(message)
+
+        @dynamic_test
+        def test(self):
+            pr = TestedProgram()
+            user_output = pr.start().strip()
+
+            if len(user_output.strip()) == 0:
+                raise WrongAnswer("Seems like your program does not show any output.")
+
+            # check output format
+            self.check_outputs_number(5, user_output)
+
+            # check Shapiro tests p-values
+            p_value = [0.8418697118759155]
+            user_values = [float(value) for value in user_output.split()][:1]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of Shapiro-Wilk test for the mean surface brightness of the IGL is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            p_value = [0.07041092216968536]
+            user_values = [float(value) for value in user_output.split()][1:2]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of Shapiro-Wilk test for mean Sersic index is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            p_value = [0.5136213898658752]
+            user_values = [float(value) for value in user_output.split()][2:3]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of Shapiro-Wilk test for mean numerical galaxy type is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            # check non-correlation tests p-values
+            p_value = [0.0003025740445687669]
+            user_values = [float(value) for value in user_output.split()][3:4]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of non-correlation test between the mean surface brightness of the IGL and mean Sersic indexes is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            p_value = [5.310877708860126e-05]
+            user_values = [float(value) for value in user_output.split()][4:5]
+            self.check_num_values(p_value, user_values,
+                                  "The p-value of non-correlation tests between the mean surface brightness of the IGL and mean numerical galaxy type is wrong.\n"
+                                  "Make sure that you provide numbers in the correct order.",
+                                  rel_tol=1.0e-2)
+
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        Stage4Test().run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/249/stages/1252/implement#comment
+status: Solved
+record: 3
